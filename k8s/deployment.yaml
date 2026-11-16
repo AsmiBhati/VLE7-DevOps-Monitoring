@@ -1,0 +1,27 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vle7-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vle7-app
+  template:
+    metadata:
+      labels:
+        app: vle7-app
+    spec:
+      containers:
+        - name: vle7-app
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
