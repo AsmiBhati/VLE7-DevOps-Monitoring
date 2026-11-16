@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'AsmiBhati/vle7-devops-monitoring'
+        DOCKER_IMAGE = 'asmibhati/vle7-devops-monitoring'
         EC2_HOST = '98.81.178.30'
     }
 
