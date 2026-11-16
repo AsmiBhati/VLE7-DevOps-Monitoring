@@ -5,8 +5,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'AsmiBhati/vle7-devops-monitoring'
         EC2_HOST = '98.81.178.30'
-        SSH_CREDENTIALS = 'ec2-ssh-key'
-        DOCKER_CREDENTIALS = 'dockerhub-creds'
     }
 
     stages {
@@ -54,6 +52,8 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-ssh-key']) {
                     sh '''
+                        set -e
+
                         scp -o StrictHostKeyChecking=accept-new \
                           k8s/deployment.yaml \
                           k8s/service.yaml \
@@ -61,16 +61,16 @@ pipeline {
 
                         ssh -o StrictHostKeyChecking=accept-new \
                           ubuntu@${EC2_HOST} \
-                          'sudo k3s kubectl apply -f /tmp/deployment.yaml &&
-                           sudo k3s kubectl apply -f /tmp/service.yaml'
+                          "sudo k3s kubectl apply -f /tmp/deployment.yaml &&
+                           sudo k3s kubectl apply -f /tmp/service.yaml"
 
                         ssh -o StrictHostKeyChecking=accept-new \
                           ubuntu@${EC2_HOST} \
-                          'sudo k3s kubectl set image \
+                          "sudo k3s kubectl set image \
                            deployment/vle7-app \
                            vle7-app=${DOCKER_IMAGE}:${BUILD_NUMBER} &&
                            sudo k3s kubectl rollout status \
-                           deployment/vle7-app --timeout=120s'
+                           deployment/vle7-app --timeout=120s"
                     '''
                 }
             }
